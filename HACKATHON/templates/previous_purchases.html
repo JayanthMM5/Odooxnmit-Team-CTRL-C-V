@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Previous Purchases{% endblock %}
+{% block content %}
+    <h2>Previous Purchases</h2>
+    <div class="purchase-list">
+        {% for purchase in purchases %}
+            <div class="purchase-card">
+                <h4>{{ purchase['title'] }}</h4>
+                <p>Price: ${{ purchase['price'] }}</p>
+                <p>Date: {{ purchase['purchase_date'] }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <div class="hero-section">
+        <h1>EcoFinds</h1>
+        <p>Discover Sustainable Second-Hand Deals!</p>
+    </div>
+    <div class="search-container">
+        <form class="search-form" action="{{ url_for('landing') }}">
+            <input type="text" name="search" placeholder="Search for products...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div class="category-filters">
+        <h3>Browse Categories</h3>
+        <div class="category-buttons">
+            {% for cat in categories %}
+                <a href="{{ url_for('landing', category=cat) }}" class="category-btn">{{ cat }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="promo-banner">
+        <p>Get up to 20% off on selected items! Sustainable shopping made easy.</p>
+    </div>
+    <div class="product-showcase">
+        <h2>Fresh Recommendations</h2>
+        <div class="product-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ url_for('static', filename=product['image_url']) }}" alt="{{ product['title'] }}" class="product-img">
+                    <h4>{{ product['title'] }}</h4>
+                    <p class="price">
+                        {% if product['discount'] > 0 %}
+                            <span class="original-price">₹{{ product['price'] }}</span> ₹{{ product['price'] - product['discount'] }} ({{ product['discount'] }}% off)
+                        {% else %}
+                            ₹{{ product['price'] }}
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('product_detail', product_id=product['id']) }}" class="view-btn">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if session.user_id %}
+        <a href="{{ url_for('add_product') }}" class="add-btn">+</a>
+    {% endif %}
+{% endblock %}

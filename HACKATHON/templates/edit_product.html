@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Edit Product{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <h2>Edit Product</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="title">Product Title</label>
+            <input type="text" name="title" value="{{ product['title'] }}" required>
+
+            <label for="category">Category</label>
+            <select name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if cat == product['category'] %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="description">Description</label>
+            <textarea name="description" required>{{ product['description'] }}</textarea>
+
+            <label for="price">Price</label>
+            <input type="number" name="price" value="{{ product['price'] }}" step="0.01" required>
+
+            <label for="discount">Discount %</label>
+            <input type="number" name="discount" value="{{ product['discount'] }}" step="0.01">
+
+            <label for="image">Image (Current: {{ product['image_url'] }})</label>
+            <input type="file" name="image">
+
+            <button type="submit" class="button">Update Listing</button>
+        </form>
+    </div>
+{% endblock %}

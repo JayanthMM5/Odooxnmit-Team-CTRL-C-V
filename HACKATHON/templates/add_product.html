@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Add Product{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <h2>Add New Product</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="title">Product Title</label>
+            <input type="text" name="title" placeholder="Product Title" required>
+
+            <label for="category">Category</label>
+            <select name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="description">Description</label>
+            <textarea name="description" placeholder="Description" required></textarea>
+
+            <label for="price">Price</label>
+            <input type="number" name="price" placeholder="Price" step="0.01" required>
+
+            <label for="discount">Discount %</label>
+            <input type="number" name="discount" placeholder="Discount %" step="0.01">
+
+            <label for="image">Image</label>
+            <input type="file" name="image">
+
+            <button type="submit" class="button">Submit Listing</button>
+        </form>
+    </div>
+{% endblock %}

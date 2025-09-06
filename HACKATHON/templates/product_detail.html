@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ product['title'] }}{% endblock %}
+{% block content %}
+    <div class="product-detail">
+        <img src="{{ url_for('static', filename=product['image_url']) }}" alt="Product" class="large-img">
+        <h2>{{ product['title'] }}</h2>
+        <p class="price">
+            {% if product['discount']|default(0.0) > 0 %}
+                <span class="original-price">₹{{ product['price'] }}</span> ₹{{ product['price'] - product['discount']|default(0.0) }} ({{ product['discount']|default(0.0) }}% off)
+            {% else %}
+                ₹{{ product['price'] }}
+            {% endif %}
+        </p>
+        <p>Category: {{ product['category'] }}</p>
+        <p>Description: {{ product['description'] }}</p>
+        <p>Sustainability Score: {{ score }}%</p>
+        {% if session.user_id %}
+            <a href="{{ url_for('add_to_cart', product_id=product['id']) }}">Add to Cart</a>
+        {% endif %}
+    </div>
+{% endblock %}
