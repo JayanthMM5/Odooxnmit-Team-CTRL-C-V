@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Find Sustainable Second-Hand Treasures</h2>
+    <p class="text-center">Join our community of eco-conscious buyers and sellers</p>
+    
+    <form action="{{ url_for('search') }}" method="GET" class="mb-4">
+        <div class="input-group justify-content-center">
+            <input type="text" class="form-control w-50" name="q" placeholder="Search by title" value="{{ search_query or '' }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    
+    <div class="mb-4 text-center">
+        <a href="{{ url_for('search') }}" class="btn btn-outline-secondary">All Categories</a>
+        {% for category in categories %}
+            <a href="{{ url_for('search', category_id=category.id) }}" class="btn btn-outline-secondary {% if selected_category == category.id|string %}active{% endif %}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+    
+    <h3 class="text-center">Latest Products</h3>
+    {% if products %}
+        <div class="row justify-content-center">
+            {% for product in products %}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow">
+                        {% if product.image_path %}
+                            <img src="{{ url_for('static', filename='uploads/' + product.image_path) }}" class="card-img-top" alt="Product Image">
+                        {% else %}
+                            <div class="card-img-top bg-light text-center p-3">No Image</div>
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">${{ "%.2f"|format(product.price) }}</p>
+                            <p class="card-text">{{ product.category_name }}</p>
+                            <p class="card-text">Sold by: {{ product.seller }}</p>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-info">View Details</a>
+                            {% if session.user_id %}
+                                {% if session.user_id != product.seller_id %}
+                                    <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="btn btn-success mt-2">Add to Cart</a>
+                                {% else %}
+                                    <p class="text-muted mt-2">You cannot add your own product to cart.</p>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-muted mt-2"><a href="{{ url_for('login') }}">Login</a> to add this item to your cart.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No products found. {% if not session.user_id %}Register to be the first to list an item!{% endif %}</p>
+    {% endif %}
+</div>
+{% endblock %}

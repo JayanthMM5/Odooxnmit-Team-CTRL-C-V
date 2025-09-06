@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Your Purchase History</h2>
+    {% if purchases %}
+        <div class="row justify-content-center">
+            {% for purchase in purchases %}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow">
+                        {% if purchase.image_path %}
+                            <img src="{{ url_for('static', filename='uploads/' + purchase.image_path) }}" class="card-img-top" alt="Product Image">
+                        {% else %}
+                            <div class="card-img-top bg-light text-center p-3">No Image</div>
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ purchase.title }}</h5>
+                            <p class="card-text">${{ "%.2f"|format(purchase.total_price) }} (Quantity: {{ purchase.quantity }})</p>
+                            <p class="card-text">Sold by: {{ purchase.seller }}</p>
+                            <p class="card-text">Purchased on: {{ purchase.purchase_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">You haven't made any purchases yet. <a href="{{ url_for('index') }}">Browse products</a></p>
+    {% endif %}
+</div>
+{% endblock %}

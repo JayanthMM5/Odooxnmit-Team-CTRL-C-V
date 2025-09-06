@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Your Dashboard</h2>
+    
+    <!-- Profile Section -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-light text-center">
+                    <h3>Your Profile</h3>
+                </div>
+                <div class="card-body text-center">
+                    {% if user.user_image %}
+                        <img src="{{ url_for('static', filename='uploads/' + user.user_image) }}" alt="User Image" class="rounded-circle mb-3" style="width: 150px; height: 150px;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='default_user.png') }}" alt="Default User Image" class="rounded-circle mb-3" style="width: 150px; height: 150px;">
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3 text-left">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                        </div>
+                        <div class="mb-3 text-left">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                        <div class="mb-3 text-left">
+                            <label for="password" class="form-label">New Password (leave blank to keep current):</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                        <div class="mb-3 text-left">
+                            <label for="user_image" class="form-label">Upload New Profile Image:</label>
+                            <input type="file" class="form-control" id="user_image" name="user_image" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Products Section -->
+    <div class="text-center mb-3">
+        <a href="{{ url_for('add_product') }}" class="btn btn-success">Add New Product</a>
+    </div>
+    <h3 class="text-center">Your Products</h3>
+    {% if products %}
+        <div class="row justify-content-center">
+            {% for product in products %}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow">
+                        {% if product.image_path %}
+                            <img src="{{ url_for('static', filename='uploads/' + product.image_path) }}" class="card-img-top" alt="Product Image">
+                        {% else %}
+                            <div class="card-img-top bg-light text-center p-3">No Image</div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ product.title }}</h5>
+                            <p class="card-text text-center">${{ "%.2f"|format(product.price) }}</p>
+                            <p class="card-text text-center">{{ product.category_name }}</p>
+                            <div class="text-center">
+                                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-warning">Edit</a>
+                                <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">You haven't listed any products yet. <a href="{{ url_for('add_product') }}">Add your first product</a></p>
+    {% endif %}
+</div>
+{% endblock %}

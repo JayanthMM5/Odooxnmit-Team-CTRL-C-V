@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-light text-center">
+                    <h2>Edit Product</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mb-3">Back</a>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Product Title:</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ product.title }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ product.description }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price ($):</label>
+                            <input type="number" class="form-control" id="price" name="price" value="{{ product.price }}" step="0.01" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category:</label>
+                            <select class="form-select" id="category_id" name="category_id" required>
+                                <option value="">Select a category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Product Image:</label>
+                            {% if product.image_path %}
+                                <img src="{{ url_for('static', filename='uploads/' + product.image_path) }}" alt="Current image" class="img-fluid mb-2 rounded" style="max-width: 200px;">
+                            {% endif %}
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

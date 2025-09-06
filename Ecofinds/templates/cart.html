@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Your Shopping Cart</h2>
+    {% if cart_items %}
+        <div class="row justify-content-center">
+            {% for item in cart_items %}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow">
+                        {% if item.image_path %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image_path) }}" class="card-img-top" alt="Product Image">
+                        {% else %}
+                            <div class="card-img-top bg-light text-center p-3">No Image</div>
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">${{ "%.2f"|format(item.price) }} each</p>
+                            <p class="card-text">Sold by: {{ item.seller }}</p>
+                            <form method="POST" class="d-flex justify-content-center mb-2">
+                                <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                <input type="hidden" name="action" value="update">
+                                <div class="input-group w-75">
+                                    <span class="input-group-text">Quantity:</span>
+                                    <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}" min="1" required>
+                                    <button type="submit" class="btn btn-outline-secondary">Update</button>
+                                </div>
+                            </form>
+                            <form method="POST" class="d-flex justify-content-center">
+                                <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                <input type="hidden" name="action" value="remove">
+                                <button type="submit" class="btn btn-danger w-75">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <h4>Total: ${{ "%.2f"|format(total) }}</h4>
+            <a href="{{ url_for('checkout') }}" class="btn btn-success">Checkout</a>
+        </div>
+    {% else %}
+        <p class="text-center">Your cart is empty. <a href="{{ url_for('index') }}">Browse products</a></p>
+    {% endif %}
+</div>
+{% endblock %}
